@@ -57,6 +57,14 @@ void MainWinUI::initInputGrpBx(){
 
 }
 
+void MainWinUI::setCtrlEnabled(bool enable){
+
+  this->m_inputEdit.setEnabled(enable);
+  this->m_statusLbl.setText(enable ? "状态 : 连接成功" : "状态 : 未登录");
+  this->m_logInOutBtn.setText(enable ? "退出" : "登录");
+  this->m_sendBtn.setEnabled(enable);
+}
+
 void MainWinUI::connectSlots(){
 
   connect(&m_logInOutBtn, SIGNAL(clicked()), this, SLOT(onLogInOutBtnClicked()));

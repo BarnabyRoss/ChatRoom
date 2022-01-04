@@ -27,6 +27,7 @@ private:
   void initMember();
 
   void connectSlots();
+  void setCtrlEnabled(bool enable);
   void handle(QTcpSocket& tcp, TextMessage& message);
 
 protected slots:
