@@ -20,9 +20,10 @@ public:
   ~MainWinUI();
 
 private:
+  void initMsgGrpBx();
+
+private:
   QVBoxLayout m_vLayout;
-  QHBoxLayout m_hLayout;
-  QGridLayout m_gridLayout;
 
   QGroupBox m_msgGrpBx;
   QGroupBox m_inputGrpBx;
