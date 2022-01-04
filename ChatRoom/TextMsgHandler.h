@@ -7,7 +7,7 @@
 class TextMsgHandler{
 
 public:
-  virtual void handler(QTcpSocket&, TextMessage&) = 0;
+  virtual void handle(QTcpSocket&, TextMessage&) = 0;
 };
 
 #endif // __TEXTMSGHANDLER_H__

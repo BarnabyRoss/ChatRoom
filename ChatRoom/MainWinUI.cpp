@@ -5,6 +5,7 @@ MainWinUI::MainWinUI(QWidget* parent) : QWidget(parent){
   initMsgGrpBx();
   initInputGrpBx();
   connectSlots();
+  initMember();
 
   m_vLayout.setSpacing(10);
   m_vLayout.addWidget(&m_msgGrpBx);

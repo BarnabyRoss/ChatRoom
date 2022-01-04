@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QHostAddress>
 #include "Client.h"
 
 Client::Client(QObject* parent) : QObject{parent}, m_handler(nullptr){
@@ -38,7 +39,12 @@ void Client::setHandler(TextMsgHandler* handler){
 
 void Client::onConnected(){
 
-  qDebug() << "void Client::onConnected()";
+  qDebug() << "connect success!";
+  if( m_handler != nullptr ){
+
+    TextMessage tm("CONN", m_client.peerAddress().toString() + ":" + QString::number(m_client.peerPort()));
+    m_handler->handle(m_client, tm);
+  }
 }
 
 void Client::onBytesWritten(qint64 bytes){
@@ -57,7 +63,7 @@ void Client::onReadyRead(){
     if( ptm != nullptr && m_handler != nullptr ){
 
       qDebug() << "Client::onReadyRead()";
-      m_handler->handler(m_client, *ptm);
+      m_handler->handle(m_client, *ptm);
     }
   }
 
@@ -67,4 +73,11 @@ void Client::onDisconnected(){
 
   qDebug() << "void Client::onDisconnected()";
   m_assembler.reset();
+
+  if( m_handler != nullptr ){
+
+    TextMessage tm("DSCN", "");
+    m_handler->handle(m_client, tm);
+  }
+
 }

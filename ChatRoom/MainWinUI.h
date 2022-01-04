@@ -11,8 +11,9 @@
 #include <QLabel>
 #include <QPushButton>
 #include "QLoginDialog.h"
+#include "Client.h"
 
-class MainWinUI : public QWidget{
+class MainWinUI : public QWidget, public TextMsgHandler{
 
   Q_OBJECT
 
@@ -23,8 +24,10 @@ public:
 private:
   void initMsgGrpBx();
   void initInputGrpBx();
+  void initMember();
 
   void connectSlots();
+  void handle(QTcpSocket& tcp, TextMessage& message);
 
 protected slots:
   void onLogInOutBtnClicked();
@@ -42,5 +45,7 @@ private:
   QPushButton m_sendBtn;
 
   QLoginDialog m_loginDlg;
+
+  Client m_client;
 };
 #endif // __MAINWINUI_H__
