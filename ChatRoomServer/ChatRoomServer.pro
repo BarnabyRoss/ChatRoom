@@ -10,6 +10,7 @@ CONFIG -= app_bundle
 
 SOURCES += \
         Server.cpp \
+        ServerHandler.cpp \
         TextMessage.cpp \
         TextMsgAssembler.cpp \
         main.cpp
@@ -21,6 +22,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
   Server.h \
+  ServerHandler.h \
   TextMessage.h \
   TextMsgAssembler.h \
   TextMsgHandler.h
