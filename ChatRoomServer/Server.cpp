@@ -43,6 +43,12 @@ void Server::onNewConnection(){
 
     m_map.insert(tcp, new TextMsgAssembler());
   }
+
+  if( m_handler != nullptr ){
+
+    TextMessage tm("CONN", tcp->peerAddress().toString() + ":" + QString::number(tcp->peerPort()));
+    this->m_handler->handle(*tcp, tm);
+  }
 }
 
 void Server::onConnected(){
@@ -68,7 +74,7 @@ void Server::onReadyRead(){
       QSharedPointer<TextMessage> ptm = assembler != nullptr ? m_assembler.assemble(buf, sizeof(buf)) : nullptr;
       if( ptm != nullptr && m_handler != nullptr ){
 
-        m_handler->handler(*tcp, *ptm);
+        m_handler->handle(*tcp, *ptm);
 
 //        TextMessage message("frsr", ptm->data());
 //        QByteArray ba = message.serialize();
@@ -87,6 +93,12 @@ void Server::onDisconnected(){
   if( tcp != nullptr ){
 
     delete m_map.take(tcp);
+  }
+
+  if( this->m_handler != nullptr ){
+
+    TextMessage tm("DISN", "");
+    this->m_handler->handle(*tcp, tm);
   }
 }
 

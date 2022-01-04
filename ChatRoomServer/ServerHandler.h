@@ -1,15 +1,16 @@
 #ifndef __SERVERHANDLER_H__
 #define __SERVERHANDLER_H__
 
-#include <QObject>
+#include <QTcpSocket>
+#include "TextMsgHandler.h"
+#include "TextMessage.h"
 
-class ServerHandler : public QObject{
+class ServerHandler : public TextMsgHandler{
 
-  Q_OBJECT
 public:
-  explicit ServerHandler(QObject* parent = nullptr);
+  explicit ServerHandler();
 
-signals:
+  virtual void handle(QTcpSocket& tcp, TextMessage& message);
 
 };
 
