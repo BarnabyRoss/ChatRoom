@@ -21,6 +21,7 @@ public:
 
 private:
   void initMsgGrpBx();
+  void initInputGrpBx();
 
 private:
   QVBoxLayout m_vLayout;
