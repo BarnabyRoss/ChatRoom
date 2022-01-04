@@ -5,6 +5,7 @@ MainWinUI::MainWinUI(QWidget* parent) : QWidget(parent){
   initMsgGrpBx();
   initInputGrpBx();
 
+  m_vLayout.setSpacing(10);
   m_vLayout.addWidget(&m_msgGrpBx);
   m_vLayout.addWidget(&m_inputGrpBx);
 
@@ -30,6 +31,8 @@ void MainWinUI::initInputGrpBx(){
 
   QGridLayout* gridLayout = new QGridLayout();
 
+  gridLayout->setSpacing(10);
+
   gridLayout->addWidget(&m_inputEdit, 0, 0, 1, 5);
   gridLayout->addWidget(&m_statusLbl, 1, 0, 1, 3);
   gridLayout->addWidget(&m_logInOutBtn, 1, 3);
@@ -44,9 +47,11 @@ void MainWinUI::initInputGrpBx(){
   this->m_logInOutBtn.setFixedHeight(30);
   this->m_sendBtn.setText("发送");
   this->m_sendBtn.setFixedHeight(30);
+  this->m_sendBtn.setEnabled(false);
 
-  m_inputGrpBx.setLayout(gridLayout);
-  m_inputGrpBx.setTitle("用户名");
+  this->m_inputGrpBx.setLayout(gridLayout);
+  this->m_inputGrpBx.setTitle("用户名");
+  this->m_inputGrpBx.setFixedHeight(100);
 
 }
 
