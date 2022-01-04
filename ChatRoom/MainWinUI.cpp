@@ -4,6 +4,7 @@ MainWinUI::MainWinUI(QWidget* parent) : QWidget(parent){
 
   initMsgGrpBx();
   initInputGrpBx();
+  connectSlots();
 
   m_vLayout.setSpacing(10);
   m_vLayout.addWidget(&m_msgGrpBx);
@@ -53,6 +54,11 @@ void MainWinUI::initInputGrpBx(){
   this->m_inputGrpBx.setTitle("用户名");
   this->m_inputGrpBx.setFixedHeight(100);
 
+}
+
+void MainWinUI::connectSlots(){
+
+  connect(&m_logInOutBtn, SIGNAL(clicked()), this, SLOT(onLogInOutBtnClicked()));
 }
 
 MainWinUI::~MainWinUI(){
