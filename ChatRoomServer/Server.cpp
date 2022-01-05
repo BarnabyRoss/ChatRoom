@@ -71,15 +71,26 @@ void Server::onReadyRead(){
     int len = -1;
     while( (len = tcp->read(buf, sizeof(buf))) > 0 ){
 
-      QSharedPointer<TextMessage> ptm = assembler != nullptr ? m_assembler.assemble(buf, sizeof(buf)) : nullptr;
-      if( ptm != nullptr && m_handler != nullptr ){
+      if( assembler != nullptr ){
 
-        m_handler->handle(*tcp, *ptm);
+        QSharedPointer<TextMessage> ptm = nullptr;
+        assembler->prepare(buf, len);
+        while( (ptm = assembler->assemble()) != nullptr ){
+
+          if( m_handler != nullptr ) m_handler->handle(*tcp, *ptm);
+        }
+      }
+
+
+//      QSharedPointer<TextMessage> ptm = assembler != nullptr ? m_assembler.assemble(buf, sizeof(buf)) : nullptr;
+//      if( ptm != nullptr && m_handler != nullptr ){
+
+//        m_handler->handle(*tcp, *ptm);
 
 //        TextMessage message("frsr", ptm->data());
 //        QByteArray ba = message.serialize();
 //        tcp->write(ba.data(), ba.length());
-      }
+//      }
     }
 
   }

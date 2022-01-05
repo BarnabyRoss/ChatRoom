@@ -13,8 +13,12 @@ void MainWinUI::onLogInOutBtnClicked(){
 
       //setCtrlEnabled(true);
       TextMessage tm("Test", "TongChen");
+      TextMessage tm2("Tm2", "ElleryQueen");
+      TextMessage tm3("Tm3", "BarnabyRoss");
 
       m_client.send(tm);
+      m_client.send(tm2);
+      m_client.send(tm3);
 
     }else{
 
