@@ -11,7 +11,10 @@ void MainWinUI::onLogInOutBtnClicked(){
 
     if( m_client.connectTo("127.0.0.1", 8080) ){
 
-      setCtrlEnabled(true);
+      //setCtrlEnabled(true);
+      TextMessage tm("Test", "TongChen");
+
+      m_client.send(tm);
 
     }else{
 
