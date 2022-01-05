@@ -3,6 +3,7 @@
 
 #include <QTcpSocket>
 #include <QList>
+#include <QMap>
 #include "TextMsgHandler.h"
 #include "TextMessage.h"
 
@@ -14,6 +15,14 @@ public:
   virtual void handle(QTcpSocket& tcp, TextMessage& message);
 
 private:
+  void CONN_Handler(QTcpSocket& tcp, TextMessage& message);
+  void DSCN_Handler(QTcpSocket& tcp, TextMessage& message);
+  void LGIN_Handler(QTcpSocket& tcp, TextMessage& message);
+
+private:
+  //MSGHandler是一个指向ServerHandler成员函数的一个函数指针, 函数类型为void (QTcpSocket&, TextMessage&)
+  typedef void(ServerHandler::*MSGHandler)(QTcpSocket&, TextMessage&);
+
   struct Node{
 
     QString usr;
@@ -24,6 +33,8 @@ private:
     Node() : usr(""), pwd(""), socket(nullptr) {}
   };
   QList<Node*> m_nodeList;
+  QMap<QString, MSGHandler> m_handlerMap;
+
 };
 
 #endif // __SERVERHANDLER_H__

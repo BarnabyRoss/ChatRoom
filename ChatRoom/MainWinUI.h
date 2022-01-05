@@ -10,6 +10,9 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QPushButton>
+#include <QMap>
+#include <QHash>
+#include <QString>
 #include "QLoginDialog.h"
 #include "Client.h"
 
@@ -30,6 +33,11 @@ private:
   void setCtrlEnabled(bool enable);
   void handle(QTcpSocket& tcp, TextMessage& message);
 
+  void CONN_Handler(QTcpSocket&, TextMessage&);
+  void DSCN_Handler(QTcpSocket&, TextMessage&);
+  void LIOK_Handler(QTcpSocket&, TextMessage&);
+  void LIER_Handler(QTcpSocket&, TextMessage&);
+
 protected slots:
   void onLogInOutBtnClicked();
 
@@ -48,5 +56,8 @@ private:
   QLoginDialog m_loginDlg;
 
   Client m_client;
+
+  typedef void(MainWinUI::*MSGHandler)(QTcpSocket&, TextMessage&);
+  QHash<QString, MSGHandler> m_handlerMap;
 };
 #endif // __MAINWINUI_H__

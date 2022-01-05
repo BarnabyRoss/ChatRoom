@@ -32,36 +32,46 @@ void MainWinUI::onLogInOutBtnClicked(){
 void MainWinUI::initMember(){
 
   this->m_client.setHandler(this);
+
+  this->m_handlerMap.insert("CONN", CONN_Handler);
+  this->m_handlerMap.insert("DSCN", DSCN_Handler);
+  this->m_handlerMap.insert("LIOK", LIOK_Handler);
+  this->m_handlerMap.insert("LIER", LIER_Handler);
 }
 
 void MainWinUI::handle(QTcpSocket& tcp, TextMessage& message){
 
-  qDebug() << &tcp;
-  qDebug() << message.type();
-  qDebug() << message.length();
-  qDebug() << message.data();
+  if( m_handlerMap.contains(message.type()) ){
 
-  if( message.type() == "CONN" ){
-
-
-  }else if( message.type() == "DSCN" ){
-
-    setCtrlEnabled(false);
-
-    m_inputGrpBx.setTitle("用户名");
-
-  }else if( message.type() == "LIOK" ){
-
-    setCtrlEnabled(true);
-
-    m_inputGrpBx.setTitle(message.data());
-
-  }else if( message.type() == "LIER" ){
-
-    QMessageBox::critical(this, "Error", "身份验证失败!");
-
-    m_client.close();
+    MSGHandler handler = m_handlerMap.value(message.type());
+    (this->*handler)(tcp, message);
   }
+}
+
+void MainWinUI::CONN_Handler(QTcpSocket&, TextMessage&){
+
+
+}
+
+void MainWinUI::DSCN_Handler(QTcpSocket&, TextMessage&){
+
+  setCtrlEnabled(false);
+
+  m_inputGrpBx.setTitle("用户名");
+}
+
+void MainWinUI::LIOK_Handler(QTcpSocket&, TextMessage& message){
+
+  setCtrlEnabled(true);
+
+  m_inputGrpBx.setTitle(message.data());
+}
+
+void MainWinUI::LIER_Handler(QTcpSocket&, TextMessage&){
+
+  QMessageBox::critical(this, "Error", "身份验证失败!");
+
+  m_client.close();
 }
 
 
