@@ -59,11 +59,15 @@ void Client::onReadyRead(){
   int len = -1;
   while( (len = m_client.read(buf, sizeof(buf))) > 0){
 
-    QSharedPointer<TextMessage> ptm = m_assembler.assemble(buf, len);
-    if( ptm != nullptr && m_handler != nullptr ){
+    QSharedPointer<TextMessage> ptm = nullptr;
+    m_assembler.prepare(buf, len);
 
-      qDebug() << "Client::onReadyRead()";
-      m_handler->handle(m_client, *ptm);
+    while( (ptm = m_assembler.assemble()) != nullptr ){
+
+      if( m_handler != nullptr ){
+
+        m_handler->handle(m_client, *ptm);
+      }
     }
   }
 
