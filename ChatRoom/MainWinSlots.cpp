@@ -4,27 +4,29 @@
 
 void MainWinUI::onLogInOutBtnClicked(){
 
-  if( m_loginDlg.exec() == QDialog::Accepted ){
+  if( !this->m_client.isValid() ){
 
-    QString usr = m_loginDlg.getUser().trimmed();
-    QString pwd = m_loginDlg.getPwd();
+    if( m_loginDlg.exec() == QDialog::Accepted ){
 
-    if( m_client.connectTo("127.0.0.1", 8080) ){
+      QString usr = m_loginDlg.getUser().trimmed();
+      QString pwd = m_loginDlg.getPwd();
 
-      //setCtrlEnabled(true);
-      TextMessage tm("Test", "TongChen");
-      TextMessage tm2("Tm2", "ElleryQueen");
-      TextMessage tm3("Tm3", "BarnabyRoss");
+      if( m_client.connectTo("127.0.0.1", 8080) ){
 
-      m_client.send(tm);
-      m_client.send(tm2);
-      m_client.send(tm3);
+        TextMessage tm("LGIN", usr + '\r' + pwd);
 
-    }else{
+        m_client.send(tm);
 
-      QMessageBox::critical(this, "Error", "无法连接到远程服务器!");
+      }else{
+
+        QMessageBox::critical(this, "Error", "无法连接到远程服务器!");
+      }
     }
+  }else{
+
+    this->m_client.close();
   }
+
 }
 
 void MainWinUI::initMember(){
@@ -38,6 +40,28 @@ void MainWinUI::handle(QTcpSocket& tcp, TextMessage& message){
   qDebug() << message.type();
   qDebug() << message.length();
   qDebug() << message.data();
+
+  if( message.type() == "CONN" ){
+
+
+  }else if( message.type() == "DSCN" ){
+
+    setCtrlEnabled(false);
+
+    m_inputGrpBx.setTitle("用户名");
+
+  }else if( message.type() == "LIOK" ){
+
+    setCtrlEnabled(true);
+
+    m_inputGrpBx.setTitle(message.data());
+
+  }else if( message.type() == "LIER" ){
+
+    QMessageBox::critical(this, "Error", "身份验证失败!");
+
+    m_client.close();
+  }
 }
 
 

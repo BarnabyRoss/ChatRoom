@@ -18,6 +18,7 @@ public:
   qint64 available();
   void close();
   void setHandler(TextMsgHandler* handler);
+  bool isValid();
 
 protected slots:
   void onConnected();

@@ -37,6 +37,11 @@ void Client::setHandler(TextMsgHandler* handler){
   this->m_handler = handler;
 }
 
+bool Client::isValid(){
+
+  return this->m_client.isValid();
+}
+
 void Client::onConnected(){
 
   qDebug() << "connect success!";

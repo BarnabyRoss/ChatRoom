@@ -72,5 +72,6 @@ void MainWinUI::connectSlots(){
 
 MainWinUI::~MainWinUI(){
 
+  m_client.close();
 }
 
