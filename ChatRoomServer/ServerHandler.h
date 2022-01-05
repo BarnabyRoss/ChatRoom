@@ -19,8 +19,11 @@ private:
     QString usr;
     QString pwd;
     QTcpSocket* socket;
+
+  public:
+    Node() : usr(""), pwd(""), socket(nullptr) {}
   };
-  QList<Node> m_nodeList;
+  QList<Node*> m_nodeList;
 };
 
 #endif // __SERVERHANDLER_H__
