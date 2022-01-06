@@ -70,7 +70,13 @@ void MainWinUI::setCtrlEnabled(bool enable){
 
   if( enable ){
 
-    this->m_msgEditor.clear();
+    this->m_inputEdit.setFocus();
+
+  }else{
+
+    m_msgEditor.clear();
+    m_listWidget.clear();
+    m_inputEdit.clear();
   }
 }
 

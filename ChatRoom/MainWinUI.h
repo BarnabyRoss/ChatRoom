@@ -33,6 +33,7 @@ private:
 
   void connectSlots();
   void setCtrlEnabled(bool enable);
+  QString getCheckedUserId();
   void handle(QTcpSocket& tcp, TextMessage& message);
 
   void CONN_Handler(QTcpSocket&, TextMessage&);

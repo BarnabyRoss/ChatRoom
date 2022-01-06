@@ -51,6 +51,21 @@ void MainWinUI::initMember(){
   this->m_handlerMap.insert("USER", USER_Handler);
 }
 
+QString MainWinUI::getCheckedUserId(){
+
+  QString ret = "";
+  for(int i = 0; i < m_listWidget.count(); ++i){
+
+    QListWidgetItem* item = m_listWidget.item(i);
+    if( item->checkState() == Qt::Checked ){
+
+      ret += item->text() + '\r';
+    }
+  }
+
+  return ret;
+}
+
 void MainWinUI::handle(QTcpSocket& tcp, TextMessage& message){
 
   if( m_handlerMap.contains(message.type()) ){
@@ -89,6 +104,7 @@ void MainWinUI::LIER_Handler(QTcpSocket&, TextMessage&){
 void MainWinUI::USER_Handler(QTcpSocket&, TextMessage& message){
 
   QStringList users = message.data().split('\r', QString::SkipEmptyParts);
+  QStringList checked = getCheckedUserId().split('\r', QString::SkipEmptyParts);
 
   m_listWidget.clear();
 
@@ -100,6 +116,18 @@ void MainWinUI::USER_Handler(QTcpSocket&, TextMessage& message){
       item->setText(users[i]);
       item->setCheckState(Qt::Unchecked);
       m_listWidget.addItem(item);
+    }
+  }
+
+  for(int i = 0; i < m_listWidget.count(); ++i){
+
+    QListWidgetItem* item = m_listWidget.item(i);
+    for(int j = 0; j < checked.length(); ++j){
+
+      if( checked.at(j) == item->text() ){
+
+        item->setCheckState(Qt::Checked);
+      }
     }
   }
 }
