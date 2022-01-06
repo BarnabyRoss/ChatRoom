@@ -34,6 +34,10 @@ void ServerHandler::DSCN_Handler(QTcpSocket& tcp, TextMessage&){
       m_nodeList.at(i)->socket = nullptr;
     }
   }
+
+  //退出时，发送用户id
+  TextMessage tm("USER", getOnlineUsrId());
+  sendToAllOnlineUsr(tm);
 }
 
 void ServerHandler::LGIN_Handler(QTcpSocket& tcp, TextMessage& message){
@@ -96,29 +100,13 @@ void ServerHandler::LGIN_Handler(QTcpSocket& tcp, TextMessage& message){
   if( result == "LIOK" ){
 
     TextMessage tm("USER", getOnlineUsrId());
-    const QByteArray& ba = tm.serialize();
-    for(int i = 0; i < m_nodeList.length(); ++i){
-
-      Node* node = m_nodeList.at(i);
-      if( node->socket != nullptr ){
-
-        node->socket->write(ba);
-      }
-    }
+    sendToAllOnlineUsr(tm);
   }
 }
 
 void ServerHandler::MSGU_Handler(QTcpSocket&, TextMessage& message){
 
-  const QByteArray& ba = message.serialize();
-  for(int i = 0; i < m_nodeList.length(); ++i){
-
-    Node* node = m_nodeList.at(i);
-    if( node->socket != nullptr ){
-
-      node->socket->write(ba);
-    }
-  }
+  sendToAllOnlineUsr(message);
 }
 
 QString ServerHandler::getOnlineUsrId(){
@@ -132,5 +120,18 @@ QString ServerHandler::getOnlineUsrId(){
   }
 
   return ret;
+}
+
+void ServerHandler::sendToAllOnlineUsr(TextMessage& message){
+
+  const QByteArray& ba = message.serialize();
+  for(int i = 0; i < m_nodeList.length(); ++i){
+
+    Node* node = m_nodeList.at(i);
+    if( node->socket != nullptr ){
+
+      node->socket->write(ba);
+    }
+  }
 }
 

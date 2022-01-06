@@ -21,6 +21,7 @@ private:
   void MSGU_Handler(QTcpSocket&, TextMessage&);
 
   QString getOnlineUsrId();
+  void sendToAllOnlineUsr(TextMessage& message);
 
 private:
   //MSGHandler是一个指向ServerHandler成员函数的一个函数指针, 函数类型为void (QTcpSocket&, TextMessage&)
