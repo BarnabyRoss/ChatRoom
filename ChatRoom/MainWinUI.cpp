@@ -21,12 +21,16 @@ void MainWinUI::initMsgGrpBx(){
   QHBoxLayout* hLayout = new QHBoxLayout();
 
   hLayout->setContentsMargins(2, 5, 2, 2);
-  hLayout->addWidget(&m_msgEditor);
+  hLayout->addWidget(&m_msgEditor, 7);
+  hLayout->addWidget(&m_listWidget, 3);
 
   m_msgEditor.setReadOnly(true);
+  m_msgEditor.setFocusPolicy(Qt::NoFocus);  //使当前组件失去焦点
+  m_listWidget.setFocusPolicy(Qt::NoFocus);
 
   m_msgGrpBx.setLayout(hLayout);
   m_msgGrpBx.setTitle("聊天消息");
+
 }
 
 void MainWinUI::initInputGrpBx(){

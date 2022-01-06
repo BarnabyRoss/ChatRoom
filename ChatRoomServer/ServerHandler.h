@@ -20,6 +20,8 @@ private:
   void LGIN_Handler(QTcpSocket&, TextMessage&);
   void MSGU_Handler(QTcpSocket&, TextMessage&);
 
+  QString getOnlineUsrId();
+
 private:
   //MSGHandler是一个指向ServerHandler成员函数的一个函数指针, 函数类型为void (QTcpSocket&, TextMessage&)
   typedef void(ServerHandler::*MSGHandler)(QTcpSocket&, TextMessage&);

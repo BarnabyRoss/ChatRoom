@@ -1,3 +1,4 @@
+#include <QByteArray>
 #include <QDebug>
 #include "ServerHandler.h"
 
@@ -90,16 +91,46 @@ void ServerHandler::LGIN_Handler(QTcpSocket& tcp, TextMessage& message){
   }
 
   tcp.write(TextMessage(result, usr).serialize());  //将登录信息发送出去
+
+  //登录成功，发送在线用户id
+  if( result == "LIOK" ){
+
+    TextMessage tm("USER", getOnlineUsrId());
+    const QByteArray& ba = tm.serialize();
+    for(int i = 0; i < m_nodeList.length(); ++i){
+
+      Node* node = m_nodeList.at(i);
+      if( node->socket != nullptr ){
+
+        node->socket->write(ba);
+      }
+    }
+  }
 }
 
 void ServerHandler::MSGU_Handler(QTcpSocket&, TextMessage& message){
 
+  const QByteArray& ba = message.serialize();
   for(int i = 0; i < m_nodeList.length(); ++i){
 
     Node* node = m_nodeList.at(i);
     if( node->socket != nullptr ){
 
-      node->socket->write(message.serialize());
+      node->socket->write(ba);
     }
   }
 }
+
+QString ServerHandler::getOnlineUsrId(){
+
+  QString ret = "";
+
+  for(int i = 0; i < m_nodeList.length(); ++i){
+
+    Node* node = m_nodeList.at(i);
+    if( node->socket != nullptr ) ret += (node->usr + '\r');
+  }
+
+  return ret;
+}
+

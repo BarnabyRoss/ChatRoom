@@ -13,6 +13,8 @@
 #include <QMap>
 #include <QHash>
 #include <QString>
+#include <QListWidget>
+#include <QListWidgetItem>
 #include "QLoginDialog.h"
 #include "Client.h"
 
@@ -50,6 +52,7 @@ private:
   QGroupBox m_inputGrpBx;
 
   QPlainTextEdit m_msgEditor;
+  QListWidget m_listWidget;
   QLineEdit m_inputEdit;
   QLabel m_statusLbl;
   QPushButton m_logInOutBtn;
