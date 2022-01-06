@@ -68,14 +68,23 @@ void MainWinUI::onSendMsgBtnClicked(){
 
 void MainWinUI::initMember(){
 
+#define MapToHandler(MSG) m_handlerMap.insert(#MSG, MSG##_Handler)
+
   this->m_client.setHandler(this);
 
-  this->m_handlerMap.insert("CONN", CONN_Handler);
-  this->m_handlerMap.insert("DSCN", DSCN_Handler);
-  this->m_handlerMap.insert("LIOK", LIOK_Handler);
-  this->m_handlerMap.insert("LIER", LIER_Handler);
-  this->m_handlerMap.insert("MSGU", MSGU_Handler);
-  this->m_handlerMap.insert("USER", USER_Handler);
+  MapToHandler(CONN);
+  MapToHandler(DSCN);
+  MapToHandler(LIOK);
+  MapToHandler(LIER);
+  MapToHandler(MSGU);
+  MapToHandler(USER);
+
+//  this->m_handlerMap.insert("CONN", CONN_Handler);
+//  this->m_handlerMap.insert("DSCN", DSCN_Handler);
+//  this->m_handlerMap.insert("LIOK", LIOK_Handler);
+//  this->m_handlerMap.insert("LIER", LIER_Handler);
+//  this->m_handlerMap.insert("MSGU", MSGU_Handler);
+//  this->m_handlerMap.insert("USER", USER_Handler);
 }
 
 QString MainWinUI::getCheckedUserId(){
