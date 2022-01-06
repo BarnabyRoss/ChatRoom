@@ -48,6 +48,7 @@ void MainWinUI::initMember(){
   this->m_handlerMap.insert("LIOK", LIOK_Handler);
   this->m_handlerMap.insert("LIER", LIER_Handler);
   this->m_handlerMap.insert("MSGU", MSGU_Handler);
+  this->m_handlerMap.insert("USER", USER_Handler);
 }
 
 void MainWinUI::handle(QTcpSocket& tcp, TextMessage& message){
@@ -87,7 +88,9 @@ void MainWinUI::LIER_Handler(QTcpSocket&, TextMessage&){
 
 void MainWinUI::USER_Handler(QTcpSocket&, TextMessage& message){
 
-  QStringList users = message.data().split('\r', Qt::SkipEmptyParts);
+  QStringList users = message.data().split('\r', QString::SkipEmptyParts);
+
+  m_listWidget.clear();
 
   for(int i = 0; i < users.length(); ++i){
 

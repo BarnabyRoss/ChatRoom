@@ -42,11 +42,6 @@ void ServerHandler::DSCN_Handler(QTcpSocket& tcp, TextMessage&){
 
 void ServerHandler::LGIN_Handler(QTcpSocket& tcp, TextMessage& message){
 
-  qDebug() << &tcp;
-  qDebug() << message.type();
-  qDebug() << message.length();
-  qDebug() << message.data();
-
   QString data = message.data();
   int index = data.indexOf('\r');
   QString usr = data.mid(0, index);

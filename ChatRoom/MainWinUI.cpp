@@ -21,8 +21,8 @@ void MainWinUI::initMsgGrpBx(){
   QHBoxLayout* hLayout = new QHBoxLayout();
 
   hLayout->setContentsMargins(2, 5, 2, 2);
-  hLayout->addWidget(&m_msgEditor, 7);
-  hLayout->addWidget(&m_listWidget, 3);
+  hLayout->addWidget(&m_msgEditor, 7);   //显示文本消息
+  hLayout->addWidget(&m_listWidget, 3);  //显示当前在线用户
 
   m_msgEditor.setReadOnly(true);
   m_msgEditor.setFocusPolicy(Qt::NoFocus);  //使当前组件失去焦点
@@ -68,7 +68,7 @@ void MainWinUI::setCtrlEnabled(bool enable){
   this->m_logInOutBtn.setText(enable ? "退出" : "登录");
   this->m_sendBtn.setEnabled(enable);
 
-  if( !enable ){
+  if( enable ){
 
     this->m_msgEditor.clear();
   }
