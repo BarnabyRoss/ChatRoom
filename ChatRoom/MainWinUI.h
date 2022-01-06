@@ -37,9 +37,11 @@ private:
   void DSCN_Handler(QTcpSocket&, TextMessage&);
   void LIOK_Handler(QTcpSocket&, TextMessage&);
   void LIER_Handler(QTcpSocket&, TextMessage&);
+  void MSGU_Handler(QTcpSocket&, TextMessage&);
 
 protected slots:
   void onLogInOutBtnClicked();
+  void onSendMsgBtnClicked();
 
 private:
   QVBoxLayout m_vLayout;

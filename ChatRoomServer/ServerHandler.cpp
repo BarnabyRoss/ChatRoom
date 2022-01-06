@@ -6,6 +6,7 @@ ServerHandler::ServerHandler(){
   m_handlerMap.insert("CONN", CONN_Handler);
   m_handlerMap.insert("DSCN", DSCN_Handler);
   m_handlerMap.insert("LGIN", LGIN_Handler);
+  m_handlerMap.insert("MSGU", MSGU_Handler);
 }
 
 void ServerHandler::handle(QTcpSocket& tcp, TextMessage& message){
@@ -23,9 +24,15 @@ void ServerHandler::CONN_Handler(QTcpSocket&, TextMessage&){
 
 }
 
-void ServerHandler::DSCN_Handler(QTcpSocket&, TextMessage&){
+void ServerHandler::DSCN_Handler(QTcpSocket& tcp, TextMessage&){
 
+  for(int i = 0; i < m_nodeList.length(); ++i){
 
+    if( &tcp == m_nodeList.at(i)->socket ){
+
+      m_nodeList.at(i)->socket = nullptr;
+    }
+  }
 }
 
 void ServerHandler::LGIN_Handler(QTcpSocket& tcp, TextMessage& message){
@@ -83,4 +90,16 @@ void ServerHandler::LGIN_Handler(QTcpSocket& tcp, TextMessage& message){
   }
 
   tcp.write(TextMessage(result, usr).serialize());  //将登录信息发送出去
+}
+
+void ServerHandler::MSGU_Handler(QTcpSocket&, TextMessage& message){
+
+  for(int i = 0; i < m_nodeList.length(); ++i){
+
+    Node* node = m_nodeList.at(i);
+    if( node->socket != nullptr ){
+
+      node->socket->write(message.serialize());
+    }
+  }
 }

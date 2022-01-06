@@ -15,9 +15,10 @@ public:
   virtual void handle(QTcpSocket& tcp, TextMessage& message);
 
 private:
-  void CONN_Handler(QTcpSocket& tcp, TextMessage& message);
-  void DSCN_Handler(QTcpSocket& tcp, TextMessage& message);
-  void LGIN_Handler(QTcpSocket& tcp, TextMessage& message);
+  void CONN_Handler(QTcpSocket&, TextMessage&);
+  void DSCN_Handler(QTcpSocket&, TextMessage&);
+  void LGIN_Handler(QTcpSocket&, TextMessage&);
+  void MSGU_Handler(QTcpSocket&, TextMessage&);
 
 private:
   //MSGHandler是一个指向ServerHandler成员函数的一个函数指针, 函数类型为void (QTcpSocket&, TextMessage&)

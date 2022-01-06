@@ -29,6 +29,16 @@ void MainWinUI::onLogInOutBtnClicked(){
 
 }
 
+void MainWinUI::onSendMsgBtnClicked(){
+
+  QString text = m_inputGrpBx.title() + ":" + '\n' + "    " + m_inputEdit.text() + '\n';
+  TextMessage tm("MSGU", text);
+  if( this->m_client.send(tm) ){
+
+    this->m_inputEdit.clear();
+  }
+}
+
 void MainWinUI::initMember(){
 
   this->m_client.setHandler(this);
@@ -37,6 +47,7 @@ void MainWinUI::initMember(){
   this->m_handlerMap.insert("DSCN", DSCN_Handler);
   this->m_handlerMap.insert("LIOK", LIOK_Handler);
   this->m_handlerMap.insert("LIER", LIER_Handler);
+  this->m_handlerMap.insert("MSGU", MSGU_Handler);
 }
 
 void MainWinUI::handle(QTcpSocket& tcp, TextMessage& message){
@@ -72,6 +83,11 @@ void MainWinUI::LIER_Handler(QTcpSocket&, TextMessage&){
   QMessageBox::critical(this, "Error", "身份验证失败!");
 
   m_client.close();
+}
+
+void MainWinUI::MSGU_Handler(QTcpSocket&, TextMessage& message){
+
+  this->m_msgEditor.appendPlainText(message.data());
 }
 
 
