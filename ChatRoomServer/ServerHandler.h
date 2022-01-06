@@ -19,6 +19,7 @@ private:
   void DSCN_Handler(QTcpSocket&, TextMessage&);
   void LGIN_Handler(QTcpSocket&, TextMessage&);
   void MSGU_Handler(QTcpSocket&, TextMessage&);
+  void MSGR_Handler(QTcpSocket&, TextMessage&);
 
   QString getOnlineUsrId();
   void sendToAllOnlineUsr(TextMessage& message);

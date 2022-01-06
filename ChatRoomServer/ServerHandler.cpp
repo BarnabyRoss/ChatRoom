@@ -4,10 +4,18 @@
 
 ServerHandler::ServerHandler(){
 
-  m_handlerMap.insert("CONN", CONN_Handler);
-  m_handlerMap.insert("DSCN", DSCN_Handler);
-  m_handlerMap.insert("LGIN", LGIN_Handler);
-  m_handlerMap.insert("MSGU", MSGU_Handler);
+#define MapToHandler(MSG) m_handlerMap.insert(#MSG, MSG##_Handler);
+
+  MapToHandler(CONN);
+  MapToHandler(DSCN);
+  MapToHandler(LGIN);
+  MapToHandler(MSGU);
+  MapToHandler(MSGR);
+//  m_handlerMap.insert("CONN", CONN_Handler);
+//  m_handlerMap.insert("DSCN", DSCN_Handler);
+//  m_handlerMap.insert("LGIN", LGIN_Handler);
+//  m_handlerMap.insert("MSGU", MSGU_Handler);
+//  m_handlerMap.insert("MSGR", MSGR_Handler);
 }
 
 void ServerHandler::handle(QTcpSocket& tcp, TextMessage& message){
@@ -99,9 +107,33 @@ void ServerHandler::LGIN_Handler(QTcpSocket& tcp, TextMessage& message){
   }
 }
 
+//公聊消息
 void ServerHandler::MSGU_Handler(QTcpSocket&, TextMessage& message){
 
   sendToAllOnlineUsr(message);
+}
+
+//私聊消息
+void ServerHandler::MSGR_Handler(QTcpSocket&, TextMessage& message){
+
+  QStringList tl = message.data().split('\r', QString::SkipEmptyParts);
+  const QByteArray& ba = TextMessage("MSGU", tl.last()).serialize();
+
+  tl.removeLast();
+
+  for(int i = 0; i < tl.length(); ++i){
+
+    for(int j = 0; j < m_nodeList.length(); ++j){
+
+      Node* node = m_nodeList.at(j);
+      if( node->socket != nullptr && node->usr == tl[i]){
+
+        node->socket->write(ba);
+        break;
+      }
+    }
+  }
+
 }
 
 QString ServerHandler::getOnlineUsrId(){

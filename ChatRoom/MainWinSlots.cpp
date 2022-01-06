@@ -31,12 +31,39 @@ void MainWinUI::onLogInOutBtnClicked(){
 
 void MainWinUI::onSendMsgBtnClicked(){
 
-  QString text = m_inputGrpBx.title() + ":" + '\n' + "    " + m_inputEdit.text() + '\n';
-  TextMessage tm("MSGU", text);
-  if( this->m_client.send(tm) ){
+  QString input = m_inputEdit.text().trimmed();
+  if( input != "" ){
 
-    this->m_inputEdit.clear();
+    QString self = m_inputGrpBx.title();
+    QString text = self + ":\n" + "    " + input + "\n";
+    QString uid = getCheckedUserId();
+    bool ok = true;
+
+    if( uid == "" ){ //公聊消息发送
+
+      TextMessage tm("MSGU", text);
+
+      ok = m_client.send(tm);
+
+    }else{//发送私聊消息
+
+      QString sid = (uid.indexOf(self) >= 0) ? uid : uid + self + '\r';
+      TextMessage tm("MSGR", sid + text);
+
+      ok = m_client.send(tm);
+    }
+
+    if( ok ){
+
+      m_inputEdit.clear();
+    }
   }
+//  QString text = m_inputGrpBx.title() + ":" + '\n' + "    " + m_inputEdit.text() + '\n';
+//  TextMessage tm("MSGU", text);
+//  if( this->m_client.send(tm) ){
+
+//    this->m_inputEdit.clear();
+//  }
 }
 
 void MainWinUI::initMember(){
