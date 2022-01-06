@@ -40,6 +40,7 @@ private:
   void LIOK_Handler(QTcpSocket&, TextMessage&);
   void LIER_Handler(QTcpSocket&, TextMessage&);
   void MSGU_Handler(QTcpSocket&, TextMessage&);
+  void USER_Handler(QTcpSocket&, TextMessage&);
 
 protected slots:
   void onLogInOutBtnClicked();

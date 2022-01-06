@@ -85,6 +85,22 @@ void MainWinUI::LIER_Handler(QTcpSocket&, TextMessage&){
   m_client.close();
 }
 
+void MainWinUI::USER_Handler(QTcpSocket&, TextMessage& message){
+
+  QStringList users = message.data().split('\r', Qt::SkipEmptyParts);
+
+  for(int i = 0; i < users.length(); ++i){
+
+    QListWidgetItem* item = new QListWidgetItem();
+    if( item != nullptr ){
+
+      item->setText(users[i]);
+      item->setCheckState(Qt::Unchecked);
+      m_listWidget.addItem(item);
+    }
+  }
+}
+
 void MainWinUI::MSGU_Handler(QTcpSocket&, TextMessage& message){
 
   this->m_msgEditor.appendPlainText(message.data());
