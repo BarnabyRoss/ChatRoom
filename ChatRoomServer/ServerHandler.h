@@ -20,6 +20,7 @@ private:
   void LGIN_Handler(QTcpSocket&, TextMessage&);
   void MSGU_Handler(QTcpSocket&, TextMessage&);
   void MSGR_Handler(QTcpSocket&, TextMessage&);
+  void ADMN_Handler(QTcpSocket&, TextMessage&);
 
   QString getOnlineUsrId();
   void sendToAllOnlineUsr(TextMessage& message);
@@ -32,10 +33,12 @@ private:
 
     QString usr;
     QString pwd;
+    QString status;
+    QString level;
     QTcpSocket* socket;
 
   public:
-    Node() : usr(""), pwd(""), socket(nullptr) {}
+    Node() : usr(""), pwd(""), status("ok"), level("user"), socket(nullptr) {}
   };
   QList<Node*> m_nodeList;
   QMap<QString, MSGHandler> m_handlerMap;

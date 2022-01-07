@@ -71,13 +71,33 @@ void MainWinUI::listWidgetMenuClicked(){
   QAction* action = dynamic_cast<QAction*>(sender());
   if( action != nullptr ){
 
-    qDebug() << action->objectName();
+    const QList<QListWidgetItem*>& sl = m_listWidget.selectedItems();
+
+    if( sl.length() > 0 ){
+
+      QString usr = sl.at(0)->text();
+      QString tip = "确认对聊天成员[" + usr + "]" + "进行" + action->text() + "操作吗?";
+      if( QMessageBox::question(this, "Tip", tip, QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes ){
+
+        QString data = action->objectName() + '\r' + usr;
+        TextMessage tm("ADMN", data);
+
+        m_client.send(tm);
+      }
+
+    }else{
+
+      QMessageBox::information(this, "Tip", "请选择聊天成员!");
+    }
   }
 }
 
 void MainWinUI::listWidgetContextMenu(const QPoint&){
 
-  m_listWidgetMenu.exec(QCursor::pos());
+  if( m_level == "admin" ){
+
+    m_listWidgetMenu.exec(QCursor::pos());
+  }
 }
 
 void MainWinUI::initMember(){
@@ -92,6 +112,7 @@ void MainWinUI::initMember(){
   MapToHandler(LIER);
   MapToHandler(MSGU);
   MapToHandler(USER);
+  MapToHandler(CTRL);
 
 //  this->m_handlerMap.insert("CONN", CONN_Handler);
 //  this->m_handlerMap.insert("DSCN", DSCN_Handler);
@@ -135,13 +156,39 @@ void MainWinUI::DSCN_Handler(QTcpSocket&, TextMessage&){
   setCtrlEnabled(false);
 
   m_inputGrpBx.setTitle("用户名");
+
+  m_level = "";
 }
 
 void MainWinUI::LIOK_Handler(QTcpSocket&, TextMessage& message){
 
-  setCtrlEnabled(true);
+//  setCtrlEnabled(true);
 
-  m_inputGrpBx.setTitle(message.data());
+//  m_inputGrpBx.setTitle(message.data());
+
+  QStringList sl = message.data().split('\r', QString::SkipEmptyParts);
+  QString id = sl[0];
+  QString status = sl[1];
+
+  m_level = sl[2];
+
+  if( status == "silent" ){
+
+    setCtrlEnabled(true);
+    m_inputGrpBx.setTitle(id);
+    m_inputEdit.setEnabled(false);
+    m_sendBtn.setEnabled(false);
+
+  }else if( status == "kick" ){
+
+    m_client.close();
+    QMessageBox::information(this, "Tip", "账号[" + id + "]" + "被禁止登录聊天室!");
+
+  }else{
+
+    setCtrlEnabled(true);
+    m_inputGrpBx.setTitle(id);
+  }
 }
 
 void MainWinUI::LIER_Handler(QTcpSocket&, TextMessage&){
@@ -185,6 +232,31 @@ void MainWinUI::USER_Handler(QTcpSocket&, TextMessage& message){
 void MainWinUI::MSGU_Handler(QTcpSocket&, TextMessage& message){
 
   this->m_msgEditor.appendPlainText(message.data());
+}
+
+void MainWinUI::CTRL_Handler(QTcpSocket&, TextMessage& message){
+
+  if( message.data() == "silent" ){
+
+    QMessageBox::information(this, "Tip", "你已经被管理员禁言!");
+
+    m_inputEdit.clear();
+    m_inputEdit.setEnabled(false);
+    m_sendBtn.setEnabled(false);
+
+  }else if(message.data() == "recover" ){
+
+    QMessageBox::information(this, "Tip", "你已经被管理员解除禁言!");
+
+    m_inputEdit.clear();
+    m_inputEdit.setEnabled(true);
+    m_sendBtn.setEnabled(true);
+
+  }else if( message.data() == "kick" ){
+
+    QMessageBox::information(this, "Tip", "账号[" + m_inputGrpBx.title() + "]" +  "你已经被管理员踢出聊天室!");
+    m_client.close();
+  }
 }
 
 

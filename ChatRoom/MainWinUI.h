@@ -44,6 +44,7 @@ private:
   void LIER_Handler(QTcpSocket&, TextMessage&);
   void MSGU_Handler(QTcpSocket&, TextMessage&);
   void USER_Handler(QTcpSocket&, TextMessage&);
+  void CTRL_Handler(QTcpSocket&, TextMessage&);
 
 protected slots:
   void onLogInOutBtnClicked();
@@ -68,6 +69,7 @@ private:
   QLoginDialog m_loginDlg;
 
   Client m_client;
+  QString m_level;
 
   typedef void(MainWinUI::*MSGHandler)(QTcpSocket&, TextMessage&);
   QHash<QString, MSGHandler> m_handlerMap;

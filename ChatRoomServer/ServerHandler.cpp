@@ -11,11 +11,19 @@ ServerHandler::ServerHandler(){
   MapToHandler(LGIN);
   MapToHandler(MSGU);
   MapToHandler(MSGR);
+  MapToHandler(ADMN);
 //  m_handlerMap.insert("CONN", CONN_Handler);
 //  m_handlerMap.insert("DSCN", DSCN_Handler);
 //  m_handlerMap.insert("LGIN", LGIN_Handler);
 //  m_handlerMap.insert("MSGU", MSGU_Handler);
 //  m_handlerMap.insert("MSGR", MSGR_Handler);
+
+  static Node admin;
+  admin.usr = "Admin";
+  admin.pwd = "0000";
+  admin.level = "admin";
+
+  m_nodeList.append(&admin);
 }
 
 void ServerHandler::handle(QTcpSocket& tcp, TextMessage& message){
@@ -55,6 +63,8 @@ void ServerHandler::LGIN_Handler(QTcpSocket& tcp, TextMessage& message){
   QString usr = data.mid(0, index);
   QString pwd = data.mid(index + 1);
   QString result = "";
+  QString status = "";
+  QString level = "";
 
   index = -1;
   for(int i = 0; i < m_nodeList.length(); ++i){
@@ -77,6 +87,8 @@ void ServerHandler::LGIN_Handler(QTcpSocket& tcp, TextMessage& message){
       m_nodeList.append(newClient);
 
       result = "LIOK";
+      status = newClient->status;
+      level = newClient->level;
 
     }else{
 
@@ -91,13 +103,15 @@ void ServerHandler::LGIN_Handler(QTcpSocket& tcp, TextMessage& message){
       node->socket = &tcp;
 
       result = "LIOK";
+      status = node->status;
+      level = node->level;
     }else{
 
       result = "LIER";
     }
   }
 
-  tcp.write(TextMessage(result, usr).serialize());  //将登录信息发送出去
+  tcp.write(TextMessage(result, usr + '\r' + status + '\r' + level).serialize());  //将登录信息发送出去
 
   //登录成功，发送在线用户id
   if( result == "LIOK" ){
@@ -134,6 +148,24 @@ void ServerHandler::MSGR_Handler(QTcpSocket&, TextMessage& message){
     }
   }
 
+}
+
+void ServerHandler::ADMN_Handler(QTcpSocket&, TextMessage& message){
+
+  QStringList data = message.data().split('\r', QString::SkipEmptyParts);
+  QString op = data[0];
+  QString id = data[1];
+
+  for(int i = 0; i < m_nodeList.length(); ++i){
+
+    Node* node = m_nodeList.at(i);
+    if( node->usr == id && node->socket != nullptr && node->level == "user"){
+
+      node->socket->write(TextMessage("CTRL", op).serialize());
+      node->status = op;
+      break;
+    }
+  }
 }
 
 QString ServerHandler::getOnlineUsrId(){

@@ -1,6 +1,6 @@
 #include "MainWinUI.h"
 
-MainWinUI::MainWinUI(QWidget* parent) : QWidget(parent){
+MainWinUI::MainWinUI(QWidget* parent) : QWidget(parent), m_loginDlg(this), m_level(""){
 
   initMsgGrpBx();
   initInputGrpBx();
