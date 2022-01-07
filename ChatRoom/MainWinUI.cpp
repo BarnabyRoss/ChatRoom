@@ -6,6 +6,7 @@ MainWinUI::MainWinUI(QWidget* parent) : QWidget(parent){
   initInputGrpBx();
   connectSlots();
   initMember();
+  initListWidgetMenu();
 
   m_vLayout.setSpacing(10);
   m_vLayout.addWidget(&m_msgGrpBx);
@@ -27,6 +28,7 @@ void MainWinUI::initMsgGrpBx(){
   m_msgEditor.setReadOnly(true);
   m_msgEditor.setFocusPolicy(Qt::NoFocus);  //使当前组件失去焦点
   m_listWidget.setFocusPolicy(Qt::NoFocus);
+  m_listWidget.setContextMenuPolicy(Qt::CustomContextMenu); //触发信号
 
   m_msgGrpBx.setLayout(hLayout);
   m_msgGrpBx.setTitle("聊天消息");
@@ -61,6 +63,22 @@ void MainWinUI::initInputGrpBx(){
 
 }
 
+void MainWinUI::initListWidgetMenu(){
+
+  QAction* action = nullptr;
+
+  action = m_listWidgetMenu.addAction("禁言", this, SLOT(listWidgetMenuClicked()));
+  action->setObjectName("silent");
+
+  action = m_listWidgetMenu.addAction("解禁", this, SLOT(listWidgetMenuClicked()));
+  action->setObjectName("recover");
+
+  m_listWidgetMenu.addSeparator();
+
+  action = m_listWidgetMenu.addAction("封号", this, SLOT(listWidgetMenuClicked()));
+  action->setObjectName("kick");
+}
+
 void MainWinUI::setCtrlEnabled(bool enable){
 
   this->m_inputEdit.setEnabled(enable);
@@ -84,6 +102,7 @@ void MainWinUI::connectSlots(){
 
   connect(&m_logInOutBtn, SIGNAL(clicked()), this, SLOT(onLogInOutBtnClicked()));
   connect(&m_sendBtn, SIGNAL(clicked()), this, SLOT(onSendMsgBtnClicked()));
+  connect(&m_listWidget, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(listWidgetContextMenu(const QPoint&)));
 }
 
 MainWinUI::~MainWinUI(){

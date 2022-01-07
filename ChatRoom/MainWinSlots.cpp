@@ -66,6 +66,20 @@ void MainWinUI::onSendMsgBtnClicked(){
 //  }
 }
 
+void MainWinUI::listWidgetMenuClicked(){
+
+  QAction* action = dynamic_cast<QAction*>(sender());
+  if( action != nullptr ){
+
+    qDebug() << action->objectName();
+  }
+}
+
+void MainWinUI::listWidgetContextMenu(const QPoint&){
+
+  m_listWidgetMenu.exec(QCursor::pos());
+}
+
 void MainWinUI::initMember(){
 
 #define MapToHandler(MSG) m_handlerMap.insert(#MSG, MSG##_Handler)

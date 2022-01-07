@@ -15,6 +15,7 @@
 #include <QString>
 #include <QListWidget>
 #include <QListWidgetItem>
+#include <QMenu>
 #include "QLoginDialog.h"
 #include "Client.h"
 
@@ -30,6 +31,7 @@ private:
   void initMsgGrpBx();
   void initInputGrpBx();
   void initMember();
+  void initListWidgetMenu();
 
   void connectSlots();
   void setCtrlEnabled(bool enable);
@@ -46,6 +48,8 @@ private:
 protected slots:
   void onLogInOutBtnClicked();
   void onSendMsgBtnClicked();
+  void listWidgetMenuClicked();
+  void listWidgetContextMenu(const QPoint&);
 
 private:
   QVBoxLayout m_vLayout;
@@ -55,6 +59,7 @@ private:
 
   QPlainTextEdit m_msgEditor;
   QListWidget m_listWidget;
+  QMenu m_listWidgetMenu;
   QLineEdit m_inputEdit;
   QLabel m_statusLbl;
   QPushButton m_logInOutBtn;
